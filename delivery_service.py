@@ -1,19 +1,26 @@
-def delivery_service(platforms, limit):
-    if min(platforms) > limit / 2:
-        return len(platforms)
+def delivery_service(robots: list, limit: float):
+    if min(robots) > limit / 2 or len(robots) == 1:
+        return len(robots)
     else:
-        platforms.sort(reverse=True)
-        count = 0
-        while len(platforms) != 0:
-            if len(platforms) > 1 and platforms.pop() + platforms.pop() <= limit:
-                count += 1
+        robots.sort(reverse=True)
+        count_platforms = 0
+        count_robots = 0
+        last = -1
+        penult = last - 1
+        while True:
+            if (len(robots) > count_robots + 1
+                    and robots[last] + robots[penult] <= limit):
+                last -= 2
+                penult -= 2
+                count_platforms += 1
+                count_robots += 2
             else:
-                platforms.pop()
-                count += 1
-    return count
+                count_platforms += len(robots[last::-1])
+                break
+    return count_platforms
 
 
-platforms = list(map(int, input().split()))
-limit = int(input())
+robots = list(map(float, input().split()))
+limit = float(input())
 
-print(delivery_service(platforms, limit))
+print(delivery_service(robots, limit))
